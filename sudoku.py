@@ -13,6 +13,7 @@ test_board = [
 ]
 np_board = np.array(test_board)
 
+
 def show_board(b):
     """Print the board"""
     for _i in range(len(b)):
@@ -67,9 +68,7 @@ def validate_square(b, num, loc):
 
 def is_valid(b, num, loc):
     b[loc] = num    # inserts number to be tested into board
-    validators = {}
-
-    validators['row'] = validate_row(b, num, loc)
+    validators = {'row': validate_row(b, num, loc)}
     if not validators['row']:
         return False
 
