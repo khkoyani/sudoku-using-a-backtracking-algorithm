@@ -46,6 +46,7 @@ class Ui_MainWindow(object):
         self.solve_btn.setObjectName("solve_btn")
         self.solve_btn.setText('Solve Problem')
         self.grid.addWidget(self.solve_btn, 11, 3, 1, 5)
+        self.solve_btn.clicked.connect(self.clicked_solve)
         self.solve_btn.adjustSize()
 
     def setup_empty_board(self):
@@ -53,7 +54,7 @@ class Ui_MainWindow(object):
         for i in range(0, 9):
             self.boxes.append([])
             for y in range(0, 9):
-                self.boxes[i].append(MyQLineEdit(parent=self.gridLayoutWidget, name='cell_'+str(i)+str(y)))
+                self.boxes[i].append(MyQLineEdit(parent=self.gridLayoutWidget, name='cell_'+str(i)+'_'+str(y)))
                 self.grid.addWidget(self.boxes[i][y], i+1, y+1)
 
     def setup_grid(self):
@@ -87,6 +88,21 @@ class Ui_MainWindow(object):
         self.Title.setFont(get_font_with_size(30))
         self.Title.setText('Sudoku and PyQt')
         self.Title.adjustSize()
+
+    def get_values_on_board(self):
+        values = []
+        for i in range(len(self.boxes)):
+            for j in range(len(self.boxes[i])):
+                _v = self.boxes[i][j].text()
+                if _v:
+                    values.append(int(_v))
+                else:
+                    values.append(0)
+        return values
+
+    def clicked_solve(self):
+        val = self.get_values_on_board()
+        print(val)
 
 
 if __name__ == "__main__":
