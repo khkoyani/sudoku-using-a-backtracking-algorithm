@@ -24,7 +24,13 @@ class Window(QMainWindow):
         self.b1.clicked.connect(self.click_handler)
 
     def click_handler(self):
-        self.label.setText('Button was clicked')
+        self.label.setText('Button was clicked. Is it causing label resizing problems?')
+        self.update()
+
+    def update(self):
+        self.label.adjustSize()
+        self.label.move(70, 100)
+
 
 
 def start():
