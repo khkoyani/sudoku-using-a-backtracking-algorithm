@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QGridLayout, QPushButton, QWidget, QLineEdit
+from cb import SudokuBoard
 
 
 def centered(self):
@@ -20,10 +21,19 @@ class MyQLineEdit(QLineEdit):
         super(MyQLineEdit, self).__init__(*args, **kwargs)
         self.setObjectName(name)
         self.setFixedSize(QtCore.QSize(40, 40))
-        # self.setMaximumSize(QtCore.QSize(40, 40))
         centered(self)
+        self.setFont(get_font_with_size(12))
         self.setMaxLength(1)
 
+class MyButtons(QPushButton):
+    def __init__(self, name, *args, **kwargs):
+        super(MyButtons, self).__init__(*args, **kwargs)
+        self.setMinimumSize(QtCore.QSize(100, 50))
+        self.setFont(get_font_with_size(18))
+        self.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.adjustSize()
+        # self.solve_btn.setObjectName("solve_btn")
+        # self.solve_btn.setText('Solve Problem')
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -31,23 +41,34 @@ class Ui_MainWindow(object):
         self.setup_grid()
         self.setup_empty_board()
         self.setup_solve_btn()
+        self.set_test_board_btn()
         self.setup_title()
-
-
 
         self.gridLayoutWidget.adjustSize()
 
+    def set_test_board(self, _type, _values=None):
+        board = None
+        if _type == 'test':
+            game = SudokuBoard()
+            board = game.get_board()
+        if _type == 'solve':
+            board = _values
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                if board[i, j] != 0:
+                    self.boxes[i][j].setText(str(board[i, j]))
+                else:
+                    self.boxes[i][j].setText(None)
 
     def setup_solve_btn(self):
-        self.solve_btn = QtWidgets.QPushButton(self.gridLayoutWidget)
-        self.solve_btn.setMinimumSize(QtCore.QSize(100, 50))
-        self.solve_btn.setFont(get_font_with_size(20))
-        self.solve_btn.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.solve_btn.setObjectName("solve_btn")
-        self.solve_btn.setText('Solve Problem')
-        self.grid.addWidget(self.solve_btn, 11, 3, 1, 5)
+        self.solve_btn = MyButtons(parent=self.gridLayoutWidget, name="solve_btn", text='Solve Problem')
+        self.grid.addWidget(self.solve_btn, 11, 6, 1, 4)
         self.solve_btn.clicked.connect(self.clicked_solve)
-        self.solve_btn.adjustSize()
+
+    def set_test_board_btn(self):
+        self.test_board_btn = MyButtons(parent=self.gridLayoutWidget, name="test_board_btn", text='Create Test Board')
+        self.grid.addWidget(self.test_board_btn, 11, 1, 1, 5)
+        self.test_board_btn.clicked.connect(lambda: self.set_test_board('test'))
 
     def setup_empty_board(self):
         self.boxes = []
@@ -101,8 +122,10 @@ class Ui_MainWindow(object):
         return values
 
     def clicked_solve(self):
-        val = self.get_values_on_board()
-        print(val)
+        board = SudokuBoard(self.get_values_on_board())
+        ans = board.start()[1]
+        self.set_test_board(_type='solve', _values=ans)
+        # print(board.show_board())
 
 
 if __name__ == "__main__":

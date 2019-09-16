@@ -1,21 +1,29 @@
 import numpy as np
 
-test_board = [
-    [0, 0, 0, 2, 6, 0, 7, 0, 1],
-    [6, 8, 0, 0, 7, 0, 0, 9, 0],
-    [1, 9, 0, 0, 0, 4, 5, 0, 0],
-    [8, 2, 0, 1, 0, 0, 0, 4, 0],
-    [0, 0, 4, 6, 0, 2, 9, 0, 0],
-    [0, 5, 0, 0, 0, 3, 0, 2, 8],
-    [0, 0, 9, 3, 0, 0, 0, 7, 4],
-    [0, 4, 0, 0, 5, 0, 0, 3, 6],
-    [7, 0, 3, 0, 1, 8, 0, 0, 0]
-]
+
 
 class SudokuBoard:
-    def __init__(self, board):
-        self.board = np.array(board).reshape((9,9))
+    def __init__(self, board=None):
+        test_board = [
+            [0, 0, 0, 2, 6, 0, 7, 0, 1],
+            [6, 8, 0, 0, 7, 0, 0, 9, 0],
+            [1, 9, 0, 0, 0, 4, 5, 0, 0],
+            [8, 2, 0, 1, 0, 0, 0, 4, 0],
+            [0, 0, 4, 6, 0, 2, 9, 0, 0],
+            [0, 5, 0, 0, 0, 3, 0, 2, 8],
+            [0, 0, 9, 3, 0, 0, 0, 7, 4],
+            [0, 4, 0, 0, 5, 0, 0, 3, 6],
+            [7, 0, 3, 0, 1, 8, 0, 0, 0]
+        ]
+
+        if board:
+            self.board = np.array(board).reshape((9,9))
+        else:
+            self.board = np.array(test_board).reshape((9,9))
         self.solved = False
+
+    def get_board(self):
+        return self.board
 
     def start(self):
         empty_space = self.get_empty_space()
@@ -80,8 +88,6 @@ class SudokuBoard:
         if not validators['square']:
             return False
 
-        print(validators, loc, num)
-        print(self.board)
         return True
 
 
@@ -105,9 +111,3 @@ class SudokuBoard:
                 if _cell == len(self.board[_i])-1:
                     print('')
 
-sud = SudokuBoard(test_board)
-sud.show_board()
-print(sud.get_empty_space())
-sud.start()
-# sud.start()
-# sud.show_board()
